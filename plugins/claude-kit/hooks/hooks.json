@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Update|mcp__serena__replace_symbol_body|mcp__serena__insert_after_symbol|mcp__serena__insert_before_symbol|mcp__serena__replace_content|mcp__serena__rename_symbol",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "php \"${CLAUDE_PLUGIN_ROOT}/hooks/php-autofix.php\"",
+            "shell": "bash",
+            "timeout": 30,
+            "statusMessage": "PHP autofix (php -l + pint/phpcbf)"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/front-autofix.cjs\"",
+            "shell": "bash",
+            "timeout": 30,
+            "statusMessage": "Frontend autofix (prettier + eslint --fix)"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-kit",
+  "description": "Laravel + Vue 3 development toolkit",
+  "owner": { "name": "iliya" },
+  "plugins": [
+    {
+      "name": "claude-kit",
+      "description": "Laravel + Vue 3 development toolkit: agents, skills, commands and project init",
+      "source": "./plugins/claude-kit",
+      "category": "development"
+    }
+  ]
+}
