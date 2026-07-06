@@ -1,6 +1,6 @@
 {
   "name": "claude-kit",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Laravel + Vue 3 development toolkit: agents, skills, commands and project init",
   "author": { "name": "iliya" },
   "keywords": ["laravel", "vue", "php", "backend", "frontend"]
