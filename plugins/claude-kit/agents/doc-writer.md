@@ -64,7 +64,7 @@ The project keeps business-domain notes for AI in `.claude/docs/domains/` (e.g. 
 ## Quality self-check
 
 Before finishing, verify against `_conventions.md`:
-- [ ] All descriptions are in Russian.
+- [ ] All descriptions are in the project's documentation language (see CLAUDE.md).
 - [ ] Headings use only the canonical names; no `{#anchor}` suffixes.
 - [ ] Links to other project classes lead to `.md` files that really exist or are planned in this run.
 - [ ] The code in the blocks is verbatim from the source (no added comments, no leftover commented-out code unless meaningful).
@@ -90,4 +90,4 @@ Notes: <anything worth knowing — e.g. a referenced class that itself lacks doc
 
 ## Rules
 - Don't run `php artisan` / `composer`.
-- Respond to the user in Russian, keep it short.
+- Respond to the user in the project's configured language (see CLAUDE.md), keep it short.

@@ -1,90 +1,106 @@
 ---
-description: "First-run project setup: detect the Laravel + Vue stack, ask a few questions, generate .claude/CLAUDE.md, and specialize the backend/frontend agents + CRUD knowledge skills for this project."
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion
+description: "First-run project setup: explore the Laravel + Vue codebase with two Explore agents, then write the two project-truth skills (backend-utilities-knowledge + frontend-utilities-knowledge, each SKILL.md + references/crud-examples.md) and a tuned .claude/CLAUDE.md."
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, AskUserQuestion, Task
 ---
 
-You are running the **claude-kit first-run setup** for the current project. Your job:
-1. Detect the stack.
-2. Capture project-specific conventions from the user.
-3. Generate a tuned `.claude/CLAUDE.md`.
-4. **Specialize four files for this project** — the `backend-dev` and `frontend-dev` agents and the `backend-crud-flow-knowledge` / `frontend-crud-flow-knowledge` skills — by filling them with what you learned.
+You are running the **claude-kit first-run setup** for the current project.
 
-Work in the project root (`$CLAUDE_PROJECT_DIR`).
+The kit's agents and skills are portable 1:1 — the `*-conventions-knowledge` and `*-crud-flow-knowledge` skills and every agent stay generic and are **never edited by setup**. All project-specific truth lives in exactly **two skill folders**, and your whole job is to fill them:
+
+- `.claude/skills/backend-utilities-knowledge/` — `SKILL.md` + `references/crud-examples.md`
+- `.claude/skills/frontend-utilities-knowledge/` — `SKILL.md` + `references/crud-examples.md`
+
+You **explore** the codebase with two Explore agents, then **write these four files yourself**. You also generate `.claude/CLAUDE.md`. You do not touch any other agent or skill.
+
+Work in the project root (`$CLAUDE_PROJECT_DIR`). The plugin's template versions live at `${CLAUDE_PLUGIN_ROOT}/skills/{backend,frontend}-utilities-knowledge/` — read them first; they define the exact section layout and, via `> FILL:` notes, what to discover for each section.
 
 ## Checklist / resume
 
-State lives in `.claude/.kit-setup.md`. It is your working memory only — after setup, nothing reads it.
+State lives in `.claude/.kit-setup.md` (your working memory only — nothing reads it after setup).
 
-1. If `.claude/.kit-setup.md` exists, read it and resume from the first unchecked step. Otherwise create it with this skeleton:
+1. If `.claude/.kit-setup.md` exists, read it and resume from the first unchecked step. Otherwise create it:
 
 ```markdown
 # claude-kit setup
-- [ ] Stack detected
-- [ ] Questions answered
+- [ ] Codebase explored (backend + frontend)
+- [ ] Gaps answered
+- [ ] Utilities skills written (backend + frontend)
 - [ ] CLAUDE.md generated
-- [ ] Agents & knowledge specialized
 
-## Detected stack
+## Backend findings
+(filled during setup)
+
+## Frontend findings
 (filled during setup)
 
 ## User answers
 (filled during setup)
 ```
 
-Update the checkboxes and the sections as you complete each step.
+Update the checkboxes and sections as you complete each step.
 
-## Step 1 — Detect the stack (do not ask what you can detect)
+## Step 1 — Explore the codebase (two Explore agents, in parallel)
 
-- `composer.json` → Laravel version (`laravel/framework`), PHP constraint, auth package (e.g. any `*/jwt-auth`, `laravel/sanctum`, `laravel/passport`), datatable package (e.g. `yajra/laravel-datatables`), static analyzer (`larastan`/`phpstan`), formatter (`laravel/pint`, `squizlabs/php_codesniffer`).
-- `package.json` → frontend framework (Vue vs React), UI framework (Vuetify / PrimeVue / Element / Tailwind / etc.), state store (Vuex / Pinia / Redux), build tool (Vite / webpack), i18n lib, eslint/prettier presence.
-- `.env` (fallback `.env.example`) → `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `APP_NAME`, `APP_LOCALE`/`APP_FALLBACK_LOCALE`.
-- **Scan the codebase** (Glob/Grep) to discover the actual building blocks the specialized files will reference:
-  - Backend: base controller, a base list/datatable service (a class other services `extends` for tables), how services receive input (a DTO class in `app/Dto|Data|DTO`, or `$request->validated()`), custom global helpers, shared traits, the API Resource pattern, namespace layout under `app/`.
-  - Frontend: the shared API/CRUD helper (something like a `crudApi`/`useXxxApi` factory), the form-submit helper (an `uploadForm`-style util), the datatable/list component, the top-filters component, router + menu registration, the i18n locale files layout.
-  - Record concrete names/paths — these are what you bake into the four files in Step 4.
+Read the two plugin templates first so you know exactly what each `*-utilities-knowledge` section needs. Then launch **two Explore agents in one message** (they run concurrently). Give each the matching template section list and ask for concrete names/paths.
 
-Record findings in "Detected stack". Check off step 1.
+**Backend Explore agent** — discover and report, with exact class names, namespaces and file paths:
+- Stack from `composer.json` / `.env`: Laravel version, PHP constraint, DB driver, auth package, and key packages (DTO package if any, RBAC/permissions, media/files, datatable package, static analyzer + its configured level).
+- **DTO layer**: does the backend wrap validated input in a DTO (`app/Dto|Data|DTO`, a Spatie-Data-style base), or do services take `$request->validated()` / arrays? Name the base class/trait if present.
+- Base controller `authorize()` signature (is the second policy argument wrapped in an array?).
+- Soft deletes: used? the exact `exists` / uniqueness rule forms.
+- Attribute-translation policy in FormRequests.
+- Role-restricted Resource resolver (e.g. a static `resolveClass()` + the current-user helper).
+- The base datatable/list service: class name, what you implement (resource-class hook), what you override (query scope), the query/filter classes/interfaces.
+- Helpers (`app/Helpers/`) — especially the current-user/auth resolver — service traits, and the DTO optional-fields trait. One line each.
+- Namespacing layout under `app/`.
+- One real domain entity (a simple CRUD model) to use as the example in `references/crud-examples.md`.
 
-## Step 2 — Ask the user (only what you can't detect)
+**Frontend Explore agent** — discover and report, with exact names, import paths and props/methods:
+- Stack from `package.json`: Vue version, state store (Vuex/Pinia), UI framework + version, styling, HTTP client, i18n lib + supported locales, other notable libs (toasts, date, VueUse).
+- Base CRUD API client (path, the CRUD verbs it exposes, how it builds URLs, the custom-URL registrar and URL accessor).
+- Upload-form wrapper (path, instantiation, `fill`/`errors.get`/`post`/`put` API, FormData behavior).
+- Global components: filters shell, data table, table-settings, dialog, shared form/table controls — names + key props/slots/emits + the table's reload method.
+- Composables/utils: table-headers composable, response/error handler, header repository location, and other shared composables/utils.
+- Store permission getter + permission naming scheme; role helpers.
+- Header object shape; table-name uniqueness rule.
+- Routing modules aggregator path; menu item shape; i18n file layout (per-entity modules + root locale files).
+- `resources/js` folder layout; one real domain entity to use as the example.
 
-Use **AskUserQuestion** with 2–4 questions. Skip anything detection already answered. Cover the gaps needed for CLAUDE.md **and** for specializing the four files:
-- **Agent language** — the language agents should reply to the user in (e.g. Russian, English).
-- **DTO layer** — confirm: does the backend use a DTO layer (Request → DTO → Service), or do services take validated arrays / the Request directly? (This decides whether DTO steps stay or are removed in Step 4.)
-- **Backend conventions** — confirm the base list/datatable service class name (or "none"), and any custom helpers/traits/base classes agents must respect.
-- **Frontend conventions** — confirm the shared API/CRUD helper, the form helper, and the list/table + filters components the frontend agent should reuse (or "none / free-form").
+Record both reports verbatim under "Backend findings" / "Frontend findings". Check off step 1.
 
-Record answers in "User answers". Check off step 2.
+## Step 2 — Ask the user only what exploration left ambiguous
 
-## Step 3 — Generate CLAUDE.md
+Use **AskUserQuestion** with 2–4 questions. Skip anything the Explore agents answered clearly. Typically:
+- **Agent language** — the language agents reply to the user in (e.g. Russian, English).
+- **DTO layer** — only if exploration was inconclusive: confirm Request → DTO → Service vs services taking validated arrays.
+- Confirm any base class / component / helper the explorers flagged as uncertain or missing.
+
+Record answers under "User answers". Check off step 2.
+
+## Step 3 — Write the two utilities skills (you write them, from the findings)
+
+For **backend** and **frontend**, write into the project:
+- `.claude/skills/backend-utilities-knowledge/SKILL.md` and `.../references/crud-examples.md`
+- `.claude/skills/frontend-utilities-knowledge/SKILL.md` and `.../references/crud-examples.md`
+
+Method for each file:
+- Start from the plugin template (`${CLAUDE_PLUGIN_ROOT}/skills/.../`) — keep its structure, headings and YAML frontmatter (`name`, `disable-model-invocation: true`) **exactly**, so the project-local copy cleanly shadows the plugin's generic template.
+- Replace every `> FILL:` note and neutral placeholder with the **concrete** classes / helpers / packages / components / paths from Step 1–2.
+- **Remove the template's `<!-- TEMPLATE ... -->` comment block** and every `> FILL:` instruction — the written file is real project truth, not a template.
+- Drop any section that genuinely doesn't apply (state it explicitly, e.g. "No DTO layer — services take `$request->validated()`") rather than leaving a placeholder.
+- In `references/crud-examples.md`, rewrite the golden slice with the project's real base classes, namespaces, DTO base/trait (or the no-DTO variant) and the real domain example entity. If there is no DTO layer, delete the DTO section and pass `$request->validated()` to the service.
+
+These project-local copies live where the project's own skills live and take precedence over the plugin's templates. If a target already exists, show a diff and ask before overwriting. Check off step 3.
+
+> Do **not** edit the `*-conventions-knowledge` / `*-crud-flow-knowledge` skills or any agent — they are portable and read project specifics from the two utilities skills.
+
+## Step 4 — Generate CLAUDE.md
 
 - Read `${CLAUDE_PLUGIN_ROOT}/templates/CLAUDE.md.tpl`.
 - Replace every `{{PLACEHOLDER}}` with detected/answered values. For `POSTGRES_MCP_NOTE`: if `DB_CONNECTION=pgsql`, note the `postgres` MCP is available for direct DB inspection; otherwise state no DB MCP is configured for this driver.
 - Replace each `<!-- SETUP:ASK ... -->` block with the user's answers (remove the comment markers).
 - If `.claude/CLAUDE.md` already exists, show a diff and ask before overwriting.
-- Write to `.claude/CLAUDE.md`. Check off step 3.
-
-## Step 4 — Specialize agents & knowledge for this project
-
-Take the four generic files from the plugin and write **project-specific** versions into the project's `.claude/`. These project-local copies live where the project's own agents live and take precedence over the plugin's generic versions.
-
-Sources → targets:
-- `${CLAUDE_PLUGIN_ROOT}/agents/backend-dev.md` → `.claude/agents/backend-dev.md`
-- `${CLAUDE_PLUGIN_ROOT}/agents/frontend-dev.md` → `.claude/agents/frontend-dev.md`
-- `${CLAUDE_PLUGIN_ROOT}/skills/backend-crud-flow-knowledge/SKILL.md` → `.claude/skills/backend-crud-flow-knowledge/SKILL.md`
-- `${CLAUDE_PLUGIN_ROOT}/skills/frontend-crud-flow-knowledge/SKILL.md` → `.claude/skills/frontend-crud-flow-knowledge/SKILL.md`
-
-For each file, read it and rewrite the project-specific parts using Step 1–2 findings:
-- Replace every "the project's base … (see CLAUDE.md)" reference with the **actual** class / package / component name you discovered (base datatable service, datatable package, auth package, UI framework, state store, API helper, form helper, list/filters components).
-- **DTO layer:**
-  - If the project **uses DTOs** — keep the Request → DTO → Service steps and name the actual DTO base/pattern.
-  - If it **does not** — remove the DTO steps and the "if the project uses a DTO layer…" conditionals entirely; state services take `$request->validated()` / arrays. Do not leave "see CLAUDE.md" dangling.
-- Replace neutral example nouns (`Entity`, `SomeModel`, `example`) with a realistic example from this project's domain if one is obvious; otherwise leave them neutral.
-- Preserve the YAML frontmatter exactly (`name`, `model`, `effort`, `color`, `disallowedTools`, `skills`). Keep structure and headings; only concretize wording and code examples.
-- Keep the frontmatter `name` values identical to the plugin's (`backend-dev`, `frontend-dev`) so the project versions cleanly shadow the generic ones.
-
-If a target already exists, show a diff and ask before overwriting. Check off step 4.
-
-> The other agents (reviewers, testers, doc agents) and the remaining skills stay generic and read project specifics from `.claude/CLAUDE.md` — do not copy or edit them.
+- Write to `.claude/CLAUDE.md`. Check off step 4.
 
 ## Step 5 — Hand off
 

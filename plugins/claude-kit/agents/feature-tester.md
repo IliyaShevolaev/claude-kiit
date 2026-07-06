@@ -134,5 +134,5 @@ Notes: <softDelete, custom statuses, etc.>
 ## Important
 
 - Do NOT run tests yourself — ask the user to run them
-- Respond and explain to the user in Russian
+- Respond and explain to the user in the project's configured language (see CLAUDE.md)
 - Keep answers short and to the point, without unnecessary summaries

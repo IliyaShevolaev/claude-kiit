@@ -168,5 +168,5 @@ All tests passed / Bugs remaining: N
 - Never fix the application code — only the tests
 - Don't remove checks from tests to make them pass
 - If after 3 iterations of fixes the test still fails — stop the cycle, acknowledge it as a bug, and report it
-- Respond and explain to the user in Russian
+- Respond and explain to the user in the project's configured language (see CLAUDE.md)
 - Keep answers short and to the point, without unnecessary summaries

@@ -1,20 +1,14 @@
 ---
 name: frontend-conventions-knowledge
-description: "Knowledge base: the frontend architecture canon (Vue 3 SPA) — folder structure, code rules, data-handling patterns. Shared source of truth for frontend authoring and review. Not a task — injected as context."
+description: "Knowledge base: the frontend architecture canon (Vue 3 SPA) — folder structure, code rules, data-handling patterns. Shared source of truth for frontend authoring and review. Not a task — injected as context. Project-agnostic: it holds no project-specific base services, components or config — those live in frontend-utilities-knowledge."
 disable-model-invocation: true
 ---
 
 # Frontend conventions (knowledge)
 
-The canonical architecture and code standard for the project's frontend. This is the single source of truth used both when authoring frontend code and when reviewing it.
+The canonical architecture and code standard for a Vue 3 SPA frontend. Single source of truth used both when authoring frontend code and when reviewing it.
 
-## Tech stack
-
-- **Vue 3**: Composition API, `<script setup>` everywhere
-- **State store**: the project's state store, Vuex or Pinia (see CLAUDE.md) — modular stores, actions and mutations/setters as the store dictates
-- **UI framework**: the project's UI framework (see CLAUDE.md)
-- **Styling**: the project's styling conventions (see CLAUDE.md)
-- **HTTP**: axios via a base service (`crudApi.js`)
+This skill is **project-agnostic** — it carries between projects 1:1. It contains conventions only, **no code examples** and **no project-specific base services, global components, packages or config**. For the project's concrete tech stack, base services, global components, composables and worked code examples see `frontend-utilities-knowledge`.
 
 ## Architecture principles
 
@@ -44,7 +38,7 @@ resources/js/
 
 ## Data-handling patterns
 
-- Before implementing a new frontend entity, CRUD page, datatable, admin list, or form, load `frontend-crud-flow-knowledge`: it is the canonical `crudApi -> top-filters/data-table -> uploadForm -> router/menu/i18n/permissions` wiring template.
+- Before implementing a new frontend entity, CRUD page, datatable, admin list, or form, load `frontend-crud-flow-knowledge`: it is the canonical `API factory -> index (filters + table) -> form -> router/menu/i18n/permissions` wiring template.
 - Server-side pagination, search, filtering — in specialized composables
 - Synchronizing local state with the store for shared data (counters, statuses)
 - Functions (not arrows) for pure functions — for hoisting and readability

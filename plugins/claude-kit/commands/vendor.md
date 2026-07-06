@@ -67,6 +67,6 @@ Tell the user:
   claude plugin uninstall claude-kit
   ```
 - That everything under `.claude/` is now theirs to edit and commit; teammates who clone the repo get it automatically.
-- Next: run `/claude-kit:setup` to generate `.claude/CLAUDE.md` and specialize the backend/frontend agents + CRUD knowledge for this project (setup now reads/writes the vendored copies under `.claude/`).
+- Next: run `/claude-kit:setup` to fill the two project-truth skills (`backend-utilities-knowledge` + `frontend-utilities-knowledge`) via two Explore agents and generate `.claude/CLAUDE.md` (setup reads/writes the vendored copies under `.claude/`).
 
 Keep output concise.

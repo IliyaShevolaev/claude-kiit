@@ -5,7 +5,7 @@
 ## Что внутри
 
 - **Агенты** — backend-dev, frontend-dev, ревьюеры (code / security / performance / architecture / feature-integration), тестировщики, документаторы.
-- **Скиллы** — знания о канонах backend/frontend CRUD, i18n, вёрстке, тестах, документации.
+- **Скиллы** — переносимые каноны backend/frontend (`*-conventions-knowledge`, `*-crud-flow-knowledge`), скиллы проектной правды (`*-utilities-knowledge` — заполняются `setup`), а также i18n, вёрстка, тесты, документация.
 - **Команды** — воркфлоу (`feature`, `review`, `tests`, `doc`, `deep-review`, `handoff`, `phpstan-safe-fix`) и настройка проекта (`setup`, `mcp`, `lint`).
 - **Хуки** — авто-фикс PHP (`php -l` + phpcbf/pint) и фронта (prettier + eslint) после правок. Безопасны без тулинга: нет бинаря — тихо пропускают.
 
@@ -28,7 +28,7 @@
 
 В корне нового проекта прогнать по очереди:
 
-1. `/claude-kit:setup` — детект стека (composer/package/.env), пара уточняющих вопросов, генерация `.claude/CLAUDE.md` под проект + затачивание backend/frontend агентов и CRUD-knowledge под проект.
+1. `/claude-kit:setup` — два Explore-агента исследуют кодовую базу (back + front), затем команда сама пишет два скилла проектной правды — `backend-utilities-knowledge` и `frontend-utilities-knowledge` (`SKILL.md` + `references/crud-examples.md`) — и генерирует `.claude/CLAUDE.md`. Агенты и портируемые скиллы (`*-conventions-knowledge`, `*-crud-flow-knowledge`) не трогаются: вся специфика проекта живёт в двух utilities-скиллах.
 2. `/claude-kit:mcp` — проверка доступности нужных MCP (serena, postgres) и генерация `.mcp.json`.
 3. `/claude-kit:lint` — установка/подключение линтеров и хуков авто-фикса.
 

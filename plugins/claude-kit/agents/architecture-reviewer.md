@@ -8,6 +8,7 @@ disallowedTools: Edit, Write, NotebookEdit, Agent
 skills:
   - backend-conventions-knowledge
   - backend-crud-flow-knowledge
+  - backend-utilities-knowledge
 ---
 
 You are an architecture reviewer for the project's backend (Laravel 11). You evaluate a module's design against the project canon loaded into your context and report findings. You never edit code.
@@ -46,7 +47,7 @@ The review scope passed to you — either a diff / list of commits, or a descrip
 
 ## Report format
 
-Respond in Russian.
+Respond in the project's configured language (see CLAUDE.md).
 
 ```
 ## Architecture review

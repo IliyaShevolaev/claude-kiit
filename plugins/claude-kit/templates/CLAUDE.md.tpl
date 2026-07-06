@@ -23,15 +23,13 @@
 - Don't write comments in code unless explicitly asked
 
 ## Conventions
-<!-- SETUP:ASK Fill this section from the user's answers. Everything here is read by every agent, so it is the single source of truth for project-specific patterns. -->
 
-- **Architecture style:** {{ARCH_STYLE}}
-- **Backend layering:** {{BACKEND_LAYERING}}
-- **DTO layer:** {{DTO_LAYER}} <!-- e.g. "used: Request -> DTO -> Service" OR "not used: services receive validated arrays/Request" -->
-- **Base list/datatable service:** {{BASE_DATATABLE_SERVICE}} <!-- class name, or "none" -->
-- **Datatable package:** {{DATATABLE_PACKAGE}} <!-- e.g. yajra/laravel-datatables, or "none" -->
-- **Custom helpers / traits / base classes agents should know about:** {{CUSTOM_UTILITIES}}
-- **Other project conventions:** {{OTHER_CONVENTIONS}}
+Project-specific backend/frontend concretes — tech stack, base classes, helpers, traits, global components, the DTO layer, the base datatable service, golden CRUD examples — are the source of truth in the two always-loaded knowledge skills, filled by `/claude-kit:setup`:
+
+- **`backend-utilities-knowledge`** (`SKILL.md` + `references/crud-examples.md`)
+- **`frontend-utilities-knowledge`** (`SKILL.md` + `references/crud-examples.md`)
+
+The generic canon lives in `backend-/frontend-conventions-knowledge` and `backend-/frontend-crud-flow-knowledge` (portable, project-agnostic). Do not duplicate those specifics here — update the utilities skills instead.
 
 ## MCP servers
 - **serena** — always use for reading and editing code (symbol-level), not the plain Read/Edit tools. At the start of any coding task call `initial_instructions`.

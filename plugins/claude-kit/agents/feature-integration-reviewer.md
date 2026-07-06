@@ -9,6 +9,7 @@ skills:
   - backend-conventions-knowledge
   - frontend-conventions-knowledge
   - frontend-crud-flow-knowledge
+  - frontend-utilities-knowledge
   - i18n-translations
 ---
 
@@ -94,7 +95,7 @@ The review scope passed to you - either a diff / list of commits, or a feature/m
 
 ## Report format
 
-Respond in Russian.
+Respond in the project's configured language (see CLAUDE.md).
 
 ```
 ## Feature integration review
